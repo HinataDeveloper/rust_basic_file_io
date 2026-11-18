@@ -1,2 +1,4 @@
-# rust_basic_file_io
-Learning Basic File I/O in Rust Programming Language
+# Basic File I/O in Rust Programming Language.
+
+## You can see all my practice in snapshots folder
+
