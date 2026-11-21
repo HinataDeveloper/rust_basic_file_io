@@ -1,8 +1,8 @@
 // lib.rs
-// Date: Fri Nov 20 2026
+// Date: Fri Nov 21 2026
 // Educational and Practice Rust Programming Language Code
 
-// Dependency: Without any dependency
+// Dependency: src/lib.rs has no dependency to any other crates.
 
 // Kernel Version: 7.3.4-300.fc45.x86_64
 
@@ -23,3 +23,45 @@
 // libcurl: 8.21.0-DEV (sys:0.4.90+curl-8.21.0 vendored ssl:OpenSSL/3.6.3)
 // ssl: OpenSSL 3.6.3 9 Jun 2026
 // os: Fedora 45.0.0 [64-bit]
+
+use std::fs::File;
+use std::io::ErrorKind::{self};
+use std::io::{Error, Write};
+
+const FIX_FILE: &str = "/home/hinata/temp/raphael.txt";
+
+/// # Errors
+/// `open_raaphael` function returns `Result<File, std::io::Error>`
+/// if any error occurred.
+pub fn open_raphael() -> Result<File, Error> {
+    println!("\n");
+
+    let fix_file_result = File::options()
+        .read(true)
+        .append(true)
+        .create_new(true)
+        .open(FIX_FILE);
+
+    let mut fix_file = match fix_file_result {
+        Ok(ff) => ff,
+        Err(err) if err.kind() == ErrorKind::AlreadyExists => {
+            File::options().read(true).append(true).open(FIX_FILE)?
+        }
+        Err(err) => return Err(err),
+    };
+
+    fix_file.flush()?;
+
+    Ok(fix_file)
+}
+/// # Errors
+/// Returns `Result<String, Error>`
+pub fn get_string() -> Result<String, Error> {
+    println!("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+    print!("Enter a statement to write down to the file: ");
+    std::io::stdout().flush()?;
+    let mut buffer = String::new();
+    std::io::stdin().read_line(&mut buffer)?;
+    buffer.push('\n');
+    Ok(buffer)
+}

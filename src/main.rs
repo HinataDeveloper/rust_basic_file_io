@@ -1,10 +1,14 @@
-// main.rs
-// Date: Fir Nov 20 2026
+// main.r
+// Date: Fir Nov 21 2026
 // Educational and Practice Rust Programming Language Code
 
 // Project: File I/O
-// Goal: ...
-// Dependency: Without any dependency
+// Goal:
+//      A CLI program that get a argument at command line.
+//      Argument is a path of text file. open it add its
+//      context to a fix file specified within the source
+//      code. `/home/hinata/temp/raphael.txt`.
+// Dependency: src/lib.rs
 
 // Kernel Version: 7.3.4-300.fc45.x86_64
 
@@ -26,8 +30,32 @@
 // ssl: OpenSSL 3.6.3 9 Jun 2026
 // os: Fedora 45.0.0 [64-bit]
 
-fn main() {
+use rust_file_io::get_string;
+use rust_file_io::open_raphael;
+use std::env;
+use std::error::Error;
+use std::fs::File;
+use std::io::Write;
+
+fn main() -> Result<(), Box<dyn Error>> {
     println!("\n");
 
+    let mut write_buffer = String::from('\n');
+    let args: Vec<String> = env::args().collect();
+
+    if args.len() == 1 {
+        write_buffer = get_string()?;
+    } else if let Some(inp) = args.get(1) {
+        write_buffer.clone_from(inp);
+        write_buffer.push('\n');
+    }
+
+    let mut fix_file: File = open_raphael()?;
+
+    fix_file.write_all(write_buffer.as_bytes())?;
+
+    println!("Message was written ");
+
     println!("\nThe End ...\n");
+    Ok(())
 }
